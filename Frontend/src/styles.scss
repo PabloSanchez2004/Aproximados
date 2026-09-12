@@ -1,0 +1,41 @@
+@use "tailwindcss";
+
+@source "./**/*.{html,ts}";
+
+/* Tema Aproximados: oscuro obligatorio + neón */
+@theme {
+  --color-neon-lime: #c6ff00;
+  --color-neon-lime-dark: #9fd100;
+  --color-neon-purple: #b026ff;
+  --color-neon-purple-dark: #8a1ad0;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background-color: var(--color-gray-950);
+  color: var(--color-gray-100);
+  -webkit-tap-highlight-color: transparent;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.neon-glow-lime {
+  text-shadow:
+    0 0 8px rgba(198, 255, 0, 0.8),
+    0 0 24px rgba(198, 255, 0, 0.4);
+}
+
+.btn-neon {
+  min-height: 4.5rem;
+  touch-action: manipulation;
+  user-select: none;
+}

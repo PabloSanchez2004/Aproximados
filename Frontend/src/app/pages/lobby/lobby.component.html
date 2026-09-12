@@ -1,0 +1,126 @@
+<main
+  class="min-h-dvh w-full overflow-x-hidden bg-gray-950 text-gray-100 flex flex-col items-center px-4 sm:px-6 pt-safe pb-safe"
+>
+  <header class="w-full max-w-2xl flex flex-col items-center text-center gap-2 pt-8">
+    <p class="text-xs font-bold tracking-[0.3em] uppercase text-neon-purple">Sala de espera</p>
+    <h1 class="text-2xl font-black tracking-tight">
+      La previa ya tiene dueño.
+    </h1>
+    <p class="text-sm text-gray-500" role="status" aria-live="polite">
+      {{ connectedLabel() }}. El resto que se dé prisa.
+    </p>
+  </header>
+
+  <button
+    type="button"
+    class="code-panel mt-8 w-full max-w-2xl rounded-3xl border-4 border-lime-400 bg-gray-900
+           px-4 py-8 text-center shadow-[0_0_40px_rgba(198,255,0,0.22)]
+           active:scale-[0.99] transition-transform"
+    (click)="copyCode()"
+    [attr.aria-label]="'Código de sala ' + code() + '. Toca para copiar.'"
+  >
+    <p class="text-xs font-bold tracking-[0.45em] uppercase text-gray-500 mb-3">Código de sala</p>
+    <p class="code-value font-black uppercase tracking-[0.28em] text-neon-lime neon-glow-lime leading-none">
+      {{ code() || '????' }}
+    </p>
+    <p class="mt-4 text-sm font-semibold" [class.text-neon-lime]="copied()" [class.text-gray-500]="!copied()">
+      {{ copied() ? '¡Copiado! Ahora grítalo.' : 'Toca para copiar. O dictalo, tú mismo.' }}
+    </p>
+  </button>
+
+  <section class="w-full max-w-2xl mt-8" aria-label="Jugadores de la sala">
+    <div class="grid grid-cols-3 md:grid-cols-4 gap-3">
+      @for (slot of slots(); track $index) {
+        @if (slot; as player) {
+          <article
+            class="player-slot relative flex flex-col items-center justify-center gap-1 rounded-2xl bg-gray-900 px-2 py-4 min-h-28 border-2"
+            [class.border-lime-400]="player.vibe === 'ready'"
+            [class.slot-ready]="player.vibe === 'ready'"
+            [class.border-purple-800]="player.vibe === 'waiting'"
+          >
+            @if (player.vibe === 'ready') {
+              <span class="absolute top-2 right-2 text-lime-400" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                  <path
+                    fill-rule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.81a.75.75 0 1 0-1.22-.88l-3.236 4.49-1.64-1.64a.75.75 0 1 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.826-5.186Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            }
+
+            <span
+              class="flex size-10 items-center justify-center rounded-full text-sm font-black uppercase"
+              [class.bg-lime-400]="player.vibe === 'ready'"
+              [class.text-gray-950]="player.vibe === 'ready'"
+              [class.bg-purple-950]="player.vibe === 'waiting'"
+              [class.text-purple-300]="player.vibe === 'waiting'"
+            >
+              {{ player.name.charAt(0) }}
+            </span>
+
+            <p class="w-full truncate text-center text-sm font-bold leading-tight">
+              {{ player.name }}
+            </p>
+            @if (player.isHost) {
+              <p class="text-[10px] font-black uppercase tracking-widest text-gray-500">Host</p>
+            }
+            <p
+              class="w-full truncate text-center text-[11px] font-semibold leading-tight"
+              [class.text-lime-400]="player.vibe === 'ready'"
+              [class.text-purple-400]="player.vibe === 'waiting'"
+            >
+              {{ player.status }}
+            </p>
+          </article>
+        } @else {
+          <article
+            class="flex flex-col items-center justify-center rounded-2xl bg-gray-900/60 px-2 py-4 min-h-28 border-2 border-dashed border-gray-800"
+          >
+            <span class="text-2xl font-black text-gray-700">+</span>
+            <p class="text-[11px] font-semibold text-gray-600">Hueco libre</p>
+          </article>
+        }
+      }
+    </div>
+  </section>
+
+  <section class="w-full max-w-2xl mt-10 mb-6 flex flex-col items-center gap-4">
+    @if (isHost()) {
+      <button
+        type="button"
+        class="btn-neon w-full py-6 px-8 text-2xl font-black uppercase tracking-wide rounded-2xl
+               bg-neon-lime text-gray-950 shadow-[0_0_30px_rgba(198,255,0,0.35)]
+               active:scale-[0.97] active:bg-neon-lime-dark transition-transform duration-100
+               disabled:opacity-60 disabled:cursor-wait"
+        [disabled]="starting()"
+        (click)="startGame()"
+      >
+        {{ starting() ? 'Arrancando el sarao…' : 'Empezar partida' }}
+      </button>
+      <p class="text-center text-sm text-gray-500">
+        Tú pones la música. Tú das al play. Ellos que beban.
+      </p>
+    } @else {
+      <p class="text-center text-lg font-bold text-purple-300">Esperando al host…</p>
+      <p class="text-center text-sm text-gray-500">
+        No toques nada. Si se pone nervioso, echa más hielo.
+      </p>
+    }
+
+    <button
+      type="button"
+      class="w-full py-4 px-8 text-base font-bold uppercase tracking-wide rounded-2xl
+             bg-gray-900 text-gray-400 border border-gray-800
+             active:scale-[0.97] transition-transform"
+      (click)="leave()"
+    >
+      Salir de la sala
+    </button>
+  </section>
+
+  <footer class="mt-auto w-full max-w-2xl text-center text-xs text-gray-600 pb-6">
+    Aproximados. Bebe con cabeza.
+  </footer>
+</main>

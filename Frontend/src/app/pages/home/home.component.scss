@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+.room-code-input {
+  text-transform: uppercase;
+  caret-color: var(--color-neon-purple);
+  font-size: max(3rem, 16px);
+}

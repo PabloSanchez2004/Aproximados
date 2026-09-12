@@ -1,0 +1,10 @@
+{
+  "name": "aproximados-game",
+  "private": true,
+  "scripts": {
+    "start": "npm start --prefix Frontend",
+    "build": "npm run build --prefix Frontend",
+    "watch": "npm run watch --prefix Frontend",
+    "test": "npm test --prefix Frontend"
+  }
+}

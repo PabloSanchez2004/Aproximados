@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.code-value {
+  font-size: clamp(3.25rem, 14vw, 5.5rem);
+}
+
+.slot-ready {
+  box-shadow: 0 0 16px rgba(163, 230, 53, 0.28);
+}

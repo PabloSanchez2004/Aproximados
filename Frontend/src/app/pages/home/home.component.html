@@ -1,0 +1,99 @@
+<main
+  class="min-h-dvh w-full overflow-x-hidden bg-gray-950 text-gray-100 flex flex-col items-center px-6 pt-safe pb-safe"
+>
+  <!-- Cabecera / Marca -->
+  <header class="w-full max-w-sm min-w-0 flex flex-col items-center text-center gap-3 pt-12">
+    <p class="text-xs font-bold tracking-[0.3em] uppercase text-neon-purple">Drinking game</p>
+    <h1 class="text-5xl sm:text-6xl font-black leading-none tracking-tight">
+      <span class="text-white">Aproxi</span><span class="text-neon-lime neon-glow-lime">mados</span>
+    </h1>
+    <p class="text-lg text-gray-400 font-medium">
+      Acierta por los pelos o bebe. Sin excusas, sin Google.
+    </p>
+  </header>
+
+  <!-- Acciones principales: una sola columna, todo gordo -->
+  <section class="w-full max-w-sm min-w-0 flex-1 flex flex-col justify-center gap-8 py-10">
+    <!-- Crear sala -->
+    <div class="flex flex-col gap-3">
+      <button
+        type="button"
+        class="btn-neon w-full py-6 px-8 text-2xl font-black uppercase tracking-wide rounded-2xl
+               bg-neon-lime text-gray-950 shadow-[0_0_30px_rgba(198,255,0,0.35)]
+               active:scale-[0.97] active:bg-neon-lime-dark transition-transform duration-100
+               disabled:opacity-60 disabled:cursor-wait"
+        [disabled]="creating()"
+        (click)="createRoom()"
+      >
+        {{ creating() ? 'Montando el sarao…' : 'Crear sala' }}
+      </button>
+      <p class="text-center text-sm text-gray-500">
+        Tú mandas. Tú pones la música. Tú repartes los chupitos.
+      </p>
+    </div>
+
+    <!-- Separador -->
+    <div class="flex items-center gap-4 text-gray-600">
+      <span class="h-px flex-1 bg-gray-800"></span>
+      <span class="text-sm font-bold uppercase tracking-widest">o</span>
+      <span class="h-px flex-1 bg-gray-800"></span>
+    </div>
+
+    <!-- Unirse a sala -->
+    <form class="flex flex-col gap-4" (submit)="$event.preventDefault(); joinRoom()">
+      <label for="room-code" class="text-center text-base font-semibold text-gray-300">
+        ¿Te han pasado un código? Escúpelo aquí.
+      </label>
+
+      <input
+        id="room-code"
+        name="room-code"
+        type="text"
+        inputmode="text"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="characters"
+        spellcheck="false"
+        enterkeyhint="go"
+        [attr.maxlength]="codeLength"
+        placeholder="ABCD"
+        class="room-code-input w-full py-6 px-4 text-center text-5xl font-black uppercase
+               tracking-[0.5em] rounded-2xl bg-gray-900 text-white
+               border-4 border-gray-800 placeholder:text-gray-700
+               focus:outline-none focus:border-neon-purple focus:shadow-[0_0_30px_rgba(176,38,255,0.45)]
+               transition-colors"
+        [class.border-red-500]="error()"
+        [value]="roomCode()"
+        (input)="onCodeInput($event)"
+        aria-describedby="room-code-hint"
+      />
+
+      <p
+        id="room-code-hint"
+        class="min-h-6 text-center text-sm font-semibold"
+        [class.text-red-400]="error()"
+        [class.text-gray-500]="!error()"
+        role="status"
+        aria-live="polite"
+      >
+        {{ error() || codeLength + ' letras. Mayúsculas solas, no te estreses.' }}
+      </p>
+
+      <button
+        type="submit"
+        class="btn-neon w-full py-5 px-8 text-xl font-black uppercase tracking-wide rounded-2xl
+               bg-neon-purple text-white shadow-[0_0_30px_rgba(176,38,255,0.35)]
+               active:scale-[0.97] active:bg-neon-purple-dark transition-transform duration-100
+               disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed"
+        [disabled]="!canJoin()"
+      >
+        Unirme a la sala
+      </button>
+    </form>
+  </section>
+
+  <!-- Pie -->
+  <footer class="w-full max-w-sm text-center text-xs text-gray-600 pb-6">
+    Bebe con cabeza. Y si no tienes, al menos con agua entre medias.
+  </footer>
+</main>
